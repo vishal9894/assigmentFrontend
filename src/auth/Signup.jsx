@@ -26,21 +26,12 @@ const Signup = () => {
     setError(null);
 
     try {
-      const response = await axios.post(
-        `${BaseUrl}/auth/register`,
-        formData, 
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
-      localStorage.setItem("accessToken", response.data.accessToken);
+      const response = await axios.post(`${BaseUrl}/auth/register`, formData, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
 
-      console.log("Signup response:", response.data);
-      // Redirect to login after successful signup
-      const role = response.data.user?.role;
+      const role = response.data.user.role;
       if (role === "admin") navigate("/admin");
       else if (role === "manager") navigate("/manager");
       else navigate("/");

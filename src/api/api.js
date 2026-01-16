@@ -68,7 +68,7 @@ export const HandleUpdateUser = async ({ id, data }) => {
 export const HandleCreateUser = async (formData) => {
   try {
     const response = await axios.post(
-      `${BaseUrl}/auth/register`,
+      `${BaseUrl}/api/create`,
       formData
     );
     return response.data;

@@ -27,8 +27,8 @@ const Login = () => {
   setError("");
 
   try {
-    // Login (backend sets HttpOnly cookies)
-    await axios.post(
+    
+  const response =  await axios.post(
       `${BaseUrl}/auth/login`,
       formData,
       {
@@ -37,15 +37,9 @@ const Login = () => {
       }
     );
 
-    // 🔐 Ask backend who is logged in
-    const meRes = await axios.get(
-      `${BaseUrl}/auth/me`,
-      { withCredentials: true }
-    );
 
-    const role = meRes.data.user.role;
 
-    // ✅ Redirect based on REAL backend role
+    const role = response.data.user.role;
     if (role === "admin") navigate("/admin");
     else if (role === "manager") navigate("/manager");
     else navigate("/");
