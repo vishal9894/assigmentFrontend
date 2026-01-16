@@ -1,0 +1,19 @@
+import React from "react";
+import { Outlet } from "react-router-dom";
+import Header from "../components/Header";
+
+const AdminLayout = () => {
+  return (
+    <div className="h-[100vh] overflow-hidden  bg-gray-100">
+      {/* Top Header */}
+      <Header />
+
+      {/* Main Content */}
+      <main className="  overflow-y-scroll h-[90vh] ">
+        <Outlet />
+      </main>
+    </div>
+  );
+};
+
+export default AdminLayout;
