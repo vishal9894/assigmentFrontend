@@ -12,39 +12,56 @@ import HomePage from "./pages/HomePage";
 import AdminPage from "./pages/AdminPage";
 import ManagerPage from "./pages/ManagerPage";
 import Error from "./components/Error";
-// import Error from "./pages/Error"; // ✅ IMPORT ERROR
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
-    <Routes>
-      {/* Public routes */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
+    <>
+      {/* Toast notifications */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        closeOnClick
+        pauseOnHover
+        draggable
+      />
 
-      {/* User routes (user, manager, admin) */}
-      <Route element={<ProtectedRoutes allowedRoles={["user", "manager", "admin"]} />}>
-        <Route path="/" element={<HomeLayout />}>
-          <Route index element={<HomePage />} />
+      {/* Routes */}
+      <Routes>
+        {/* Public routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+
+        {/* User routes (user, manager, admin) */}
+        <Route
+          element={<ProtectedRoutes allowedRoles={["user", "manager", "admin"]} />}
+        >
+          <Route path="/" element={<HomeLayout />}>
+            <Route index element={<HomePage />} />
+          </Route>
         </Route>
-      </Route>
 
-      {/* Admin routes */}
-      <Route element={<ProtectedRoutes allowedRoles={["admin"]} />}>
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<AdminPage />} />
+        {/* Admin routes */}
+        <Route element={<ProtectedRoutes allowedRoles={["admin"]} />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminPage />} />
+          </Route>
         </Route>
-      </Route>
 
-      {/* Manager routes */}
-      <Route element={<ProtectedRoutes allowedRoles={["manager", "admin"]} />}>
-        <Route path="/manager" element={<ManagerLayout />}>
-          <Route index element={<ManagerPage />} />
+        {/* Manager routes */}
+        <Route element={<ProtectedRoutes allowedRoles={["manager", "admin"]} />}>
+          <Route path="/manager" element={<ManagerLayout />}>
+            <Route index element={<ManagerPage />} />
+          </Route>
         </Route>
-      </Route>
 
-      {/* Error route (MUST be last) */}
-      <Route path="*" element={<Error />} />
-    </Routes>
+        {/* Error route (MUST be last) */}
+        <Route path="*" element={<Error />} />
+      </Routes>
+    </>
   );
 }
 

@@ -158,6 +158,7 @@ const AdminPage = () => {
       user.email.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesRole && matchesSearch;
   });
+  
 
   const openCreateModal = () => {
     setEditingUser(null);
@@ -196,8 +197,6 @@ const AdminPage = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this user?")) return;
-
     try {
       setSubmitLoading(true);
       await HandleDeleteUser(id);

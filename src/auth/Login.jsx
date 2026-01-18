@@ -3,6 +3,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 
 
@@ -36,16 +37,15 @@ const Login = () => {
         withCredentials: true,
       }
     );
-
-
-
+      toast.success(response.data.message || "Login successful");
     const role = response.data.user.role;
     if (role === "admin") navigate("/admin");
     else if (role === "manager") navigate("/manager");
     else navigate("/");
 
   } catch (err) {
-    setError(err.response?.data?.message || "Invalid email or password");
+   
+    toast.error(err.response?.data?.message || "Login failed");
   }
 };
 
@@ -58,10 +58,7 @@ const Login = () => {
         </h2>
         <p className="text-center text-gray-500 mb-8">Login to your account</p>
 
-        {/* Error */}
-        {error && (
-          <p className="text-red-600 text-sm text-center mb-4">{error}</p>
-        )}
+       
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Email */}

@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // to redirect after signup
+import { toast } from "react-toastify";
 
 const BaseUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -31,12 +32,15 @@ const Signup = () => {
         withCredentials: true,
       });
 
+      toast.success(response.data.message || "Signup successful");
+
       const role = response.data.user.role;
       if (role === "admin") navigate("/admin");
       else if (role === "manager") navigate("/manager");
       else navigate("/");
     } catch (err) {
       console.error("Signup failed:", err.response?.data || err.message);
+      toast.error("Signup failed. Please try again.");
       setError(err.response?.data?.message || "Signup failed");
     } finally {
       setLoading(false);
@@ -50,8 +54,6 @@ const Signup = () => {
           Create Account
         </h2>
         <p className="text-center text-gray-500 mb-8">Sign up to get started</p>
-
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Name */}
