@@ -9,7 +9,7 @@ const ManagerLayout = () => {
       <Header />
 
       {/* Main Content */}
-      <main className="  overflow-y-scroll h-[90vh] ">
+      <main className=" overflow-auto h-[calc(100vh-64px)]">
         <Outlet />
       </main>
     </div>

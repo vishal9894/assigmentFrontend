@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { HandlefetchUser } from "../api/api";
 import { useEffect, useState } from "react";
 import { setUser } from "../redux/features/authSlice";
@@ -8,6 +8,7 @@ const ProtectedRoutes = ({ allowedRoles }) => {
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true); // always loading first
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -34,6 +35,10 @@ const ProtectedRoutes = ({ allowedRoles }) => {
   if (!user) {
     return <Navigate to="/login" replace />;
   }
+
+  if (user.role === "admin") navigate("/admin");
+  else if (user.role === "manager") navigate("/manager");
+  else navigate("/");
 
   // If user role is not allowed
   if (allowedRoles && !allowedRoles.includes(user.role)) {

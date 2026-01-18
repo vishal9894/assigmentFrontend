@@ -53,6 +53,7 @@ export const HandleUpdateUser = async ({ id, data }) => {
       `${BaseUrl}/api/user-update/${id}`,
       data
     );
+    withCredentials: true;
 
     return response.data;
   } catch (error) {

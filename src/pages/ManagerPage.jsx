@@ -7,7 +7,7 @@ import {
 import CreateUserModal from "../components/CreateUserModal";
 import { useDispatch, useSelector } from "react-redux";
 import { setAllUser } from "../redux/features/authSlice.js";
-import { FiClock, FiCalendar } from "react-icons/fi";
+import { FiClock, FiCalendar, FiMail, FiEdit2 } from "react-icons/fi";
 import {
   LineChart,
   Line,
@@ -35,7 +35,7 @@ const ManagerPage = () => {
     try {
       const data = await HandleFetchAllUsers();
       dispatch(setAllUser(data.users));
-      
+
       // Process registration trend data
       processRegistrationData(data.users);
     } catch (err) {
@@ -54,29 +54,33 @@ const ManagerPage = () => {
     // Create last 6 months data
     const months = [];
     const currentDate = new Date();
-    
+
     for (let i = 5; i >= 0; i--) {
-      const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
-      const monthName = date.toLocaleDateString('en-US', { month: 'short' });
+      const date = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() - i,
+        1,
+      );
+      const monthName = date.toLocaleDateString("en-US", { month: "short" });
       const year = date.getFullYear().toString().slice(-2);
       months.push({
         key: `${date.getFullYear()}-${date.getMonth()}`,
         month: `${monthName} '${year}`,
-        users: 0
+        users: 0,
       });
     }
-    
+
     // Count users per month
-    users.forEach(user => {
+    users.forEach((user) => {
       const userDate = new Date(user.createdAt);
       const userKey = `${userDate.getFullYear()}-${userDate.getMonth()}`;
-      
-      const monthData = months.find(m => m.key === userKey);
+
+      const monthData = months.find((m) => m.key === userKey);
       if (monthData) {
         monthData.users++;
       }
     });
-    
+
     setRegistrationTrendData(months);
   };
 
@@ -116,7 +120,7 @@ const ManagerPage = () => {
 
   if (pageLoading) {
     return (
-      <div className="flex justify-center items-center h-screen text-gray-500 text-lg">
+      <div className="flex justify-center items-center h-screen overflow-auto text-gray-500 text-lg">
         Loading users...
       </div>
     );
@@ -124,7 +128,7 @@ const ManagerPage = () => {
 
   if (error) {
     return (
-      <div className="flex justify-center items-center h-screen text-red-600 text-lg">
+      <div className="flex justify-center items-center overflow-auto h-screen text-red-600 text-lg">
         {error}
       </div>
     );
@@ -135,15 +139,18 @@ const ManagerPage = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
         <h1 className="text-3xl font-bold text-gray-800">Users Management</h1>
-        
       </div>
 
       {/* User Registration Timeline Chart */}
       <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">Registration Trend</h2>
-            <p className="text-gray-600 text-sm mt-1">Last 6 months of signups</p>
+            <h2 className="text-lg font-semibold text-gray-900">
+              Registration Trend
+            </h2>
+            <p className="text-gray-600 text-sm mt-1">
+              Last 6 months of signups
+            </p>
           </div>
           <FiClock className="text-gray-400" size={20} />
         </div>
@@ -152,34 +159,34 @@ const ManagerPage = () => {
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={registrationTrendData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-                <XAxis 
-                  dataKey="month" 
+                <XAxis
+                  dataKey="month"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#6b7280', fontSize: 12 }}
+                  tick={{ fill: "#6b7280", fontSize: 12 }}
                 />
-                <YAxis 
+                <YAxis
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#6b7280' }}
+                  tick={{ fill: "#6b7280" }}
                   allowDecimals={false}
                 />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: 'white',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "white",
+                    border: "1px solid #e5e7eb",
+                    borderRadius: "8px",
+                    boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
                   }}
-                  formatter={(value) => [value, 'New Users']}
+                  formatter={(value) => [value, "New Users"]}
                 />
-                <Line 
-                  type="monotone" 
-                  dataKey="users" 
-                  stroke="#F59E0B" 
+                <Line
+                  type="monotone"
+                  dataKey="users"
+                  stroke="#F59E0B"
                   strokeWidth={2}
-                  dot={{ fill: '#F59E0B', strokeWidth: 2, r: 4 }}
-                  activeDot={{ r: 6, fill: '#F59E0B' }}
+                  dot={{ fill: "#F59E0B", strokeWidth: 2, r: 4 }}
+                  activeDot={{ r: 6, fill: "#F59E0B" }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -199,7 +206,7 @@ const ManagerPage = () => {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-indigo-600 text-white">
             <tr>
-              <th className="py-3 px-4 text-left">#</th>
+              {/* <th className="py-3 px-4 text-left">#</th> */}
               <th className="py-3 px-4 text-left">Name</th>
               <th className="py-3 px-4 text-left">Email</th>
               <th className="py-3 px-4 text-left">Role</th>
@@ -217,21 +224,65 @@ const ManagerPage = () => {
               </tr>
             ) : (
               allUser.map((user, index) => (
-                <tr key={user._id} className="hover:bg-gray-50">
-                  <td className="py-3 px-4">{index + 1}</td>
-                  <td className="py-3 px-4 font-medium">{user.name}</td>
-                  <td className="py-3 px-4">{user.email}</td>
-                  <td className="py-3 px-4 capitalize">{user.role}</td>
-                  <td className="py-3 px-4">
-                    {new Date(user.createdAt).toLocaleDateString()}
+                <tr
+                  key={user._id}
+                  className="hover:bg-gray-50 transition-colors duration-150"
+                >
+                  <td className="py-4 px-6">
+                    <div className="flex items-center">
+                      <div className="h-10 w-10 rounded-xl overflow-hidden bg-gray-200">
+                        {user?.image ? (
+                          <img
+                            src={`${user?.image}`}
+                            alt={user.name}
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <div className="h-full w-full flex items-center justify-center bg-indigo-500 text-white font-semibold">
+                            {user?.name.charAt(0).toUpperCase()}
+                          </div>
+                        )}
+                      </div>
+                      <div className="ml-3">
+                        <div className="text-sm font-semibold text-gray-900">
+                          {user?.name}
+                        </div>
+                      </div>
+                    </div>
                   </td>
-                  <td className="py-3 px-4 space-x-2">
-                    <button
-                      onClick={() => openEditModal(user)}
-                      className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded"
+                  <td className="py-4 px-6">
+                    <div className="flex items-center text-sm text-gray-900">
+                      <FiMail size={14} className="mr-2 text-gray-400" />
+                      {user.email}
+                    </div>
+                  </td>
+                  <td className="py-4 px-6">
+                    <span
+                      className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium `}
                     >
-                      Edit
-                    </button>
+                      {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                    </span>
+                  </td>
+                  <td className="py-4 px-6">
+                    <div className="flex items-center text-sm text-gray-600">
+                      <FiCalendar size={14} className="mr-2 text-gray-400" />
+                      {new Date(user.createdAt).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </div>
+                  </td>
+                  <td className="py-4 px-6">
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => openEditModal(user)}
+                        className="p-2 text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 rounded-lg transition-colors duration-200"
+                        title="Edit user"
+                      >
+                        <FiEdit2 size={18} />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))
@@ -247,7 +298,7 @@ const ManagerPage = () => {
         onSubmit={handleSubmit}
         userToEdit={editingUser}
         loading={submitLoading}
-        calss = "hidden"
+        calss="hidden"
       />
     </div>
   );

@@ -9,7 +9,7 @@ const HomeLayout = () => {
       <Header />
 
       {/* Main Content */}
-      <main className=" overflow-auto ">
+      <main className=" overflow-auto  h-[90vh]">
         <Outlet />
       </main>
     </div>

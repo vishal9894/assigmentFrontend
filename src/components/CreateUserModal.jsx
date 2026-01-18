@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from "react";
 
-const CreateUserModal = ({ isOpen, onClose, onSubmit, userToEdit ,calss }) => {
+const CreateUserModal = ({ isOpen, onClose, onSubmit, userToEdit, calss }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     role: "user",
   });
+
+  const [image, setImage] = useState(null);
+
   useEffect(() => {
     if (userToEdit) {
       setFormData({
         name: userToEdit.name || "",
         email: userToEdit.email || "",
-        password: "", // do not prefill password
+        password: "",
         role: userToEdit.role || "user",
       });
+      setImage(null);
     } else {
       setFormData({
         name: "",
@@ -22,6 +26,7 @@ const CreateUserModal = ({ isOpen, onClose, onSubmit, userToEdit ,calss }) => {
         password: "",
         role: "user",
       });
+      setImage(null);
     }
   }, [userToEdit]);
 
@@ -31,7 +36,17 @@ const CreateUserModal = ({ isOpen, onClose, onSubmit, userToEdit ,calss }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData); // call parent function to handle create/update
+
+    const data = new FormData();
+    Object.keys(formData).forEach((key) => {
+      if (formData[key]) data.append(key, formData[key]);
+    });
+
+    if (image) {
+      data.append("image", image);
+    }
+
+    onSubmit(data);
   };
 
   if (!isOpen) return null;
@@ -44,75 +59,68 @@ const CreateUserModal = ({ isOpen, onClose, onSubmit, userToEdit ,calss }) => {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Name</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="John Doe"
-            />
-          </div>
+          {/* NAME */}
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            className="w-full border px-3 py-2 rounded-md"
+            placeholder="Name"
+          />
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="john@example.com"
-            />
-          </div>
+          {/* EMAIL */}
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            className="w-full border px-3 py-2 rounded-md"
+            placeholder="Email"
+          />
 
+          {/* PASSWORD */}
           {!userToEdit && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Password</label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-                className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="••••••••"
-              />
-            </div>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              className="w-full border px-3 py-2 rounded-md"
+              placeholder="Password"
+            />
           )}
 
-         
-            <div className={calss}>
-              <label className="block text-sm font-medium text-gray-700">Role</label>
-              <select
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                <option value="user">User</option>
-                <option value="manager">Manager</option>
-              </select>
-            </div>
-          
+          {/* IMAGE */}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImage(e.target.files[0])}
+            className="w-full"
+          />
 
-
-          <div className="flex justify-end space-x-2 mt-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300 transition"
+          {/* ROLE */}
+          <div className={calss}>
+            <select
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              className="w-full border px-3 py-2 rounded-md"
             >
+              <option value="user">User</option>
+              <option value="manager">Manager</option>
+            </select>
+          </div>
+
+          {/* BUTTONS */}
+          <div className="flex justify-end gap-2">
+            <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-200 rounded">
               Cancel
             </button>
-            <button
-              type="submit"
-              className="px-4 py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white transition"
-            >
+            <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded">
               {userToEdit ? "Update" : "Create"}
             </button>
           </div>
