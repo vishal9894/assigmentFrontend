@@ -19,7 +19,6 @@ import "react-toastify/dist/ReactToastify.css";
 function App() {
   return (
     <>
-      {/* Toast notifications */}
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -29,36 +28,34 @@ function App() {
         draggable
       />
 
-      {/* Routes */}
       <Routes>
-        {/* Public routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
-        {/* User routes (user, manager, admin) */}
         <Route
-          element={<ProtectedRoutes allowedRoles={["user", "manager", "admin"]} />}
+          element={
+            <ProtectedRoutes allowedRoles={["user", "manager", "admin"]} />
+          }
         >
           <Route path="/" element={<HomeLayout />}>
             <Route index element={<HomePage />} />
           </Route>
         </Route>
 
-        {/* Admin routes */}
         <Route element={<ProtectedRoutes allowedRoles={["admin"]} />}>
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminPage />} />
           </Route>
         </Route>
 
-        {/* Manager routes */}
-        <Route element={<ProtectedRoutes allowedRoles={["manager", "admin"]} />}>
+        <Route
+          element={<ProtectedRoutes allowedRoles={["manager", "admin"]} />}
+        >
           <Route path="/manager" element={<ManagerLayout />}>
             <Route index element={<ManagerPage />} />
           </Route>
         </Route>
 
-        {/* Error route (MUST be last) */}
         <Route path="*" element={<Error />} />
       </Routes>
     </>
